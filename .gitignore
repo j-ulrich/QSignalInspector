@@ -43,7 +43,7 @@ CMakeLists.txt.user*
 .settings/
 
 # CMake
-build/
-.build/
-_build/
+build*/
+.build*/
+_build*/
 
