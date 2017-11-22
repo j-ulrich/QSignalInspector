@@ -42,3 +42,8 @@ CMakeLists.txt.user*
 .cproject
 .settings/
 
+# CMake
+build/
+.build/
+_build/
+
