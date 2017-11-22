@@ -1,6 +1,6 @@
 /*! \file
  * \date Created on: 22.11.2017
- * \author Jochen
+ * \author Jochen Ulrich <jochenulrich@t-online.de>
  */
 
 #include "QSignalInspector.h"

@@ -42,7 +42,7 @@ class QSignalInspector : public QObject, public QList<QPair<QMetaMethod, QList<Q
 	Q_OBJECT
 
 public:
-	explicit QSignalInspector(const QObject* obj, bool includeBaseClassSignals = false)
+	explicit QSignalInspector(const QObject* obj, bool includeBaseClassSignals = true)
 		: QObject()
 	{
 		const QMetaObject* const metaObject = obj->metaObject();
@@ -65,16 +65,31 @@ private Q_SLOTS:
 	void signalEmitted()
 	{
 		QObject* sender = this->sender();
+		const QMetaObject* metaObject = sender->metaObject();
+
 		int signalIndex = this->senderSignalIndex();
-		QSharedPointer<QSignalSpy> signalSpy = m_signalSpies.value(signalIndex);
-		if (!signalSpy)
+		QSharedPointer<QSignalSpy> signalSpy;
+
+		/* For overloaded signals, senderSignalIndex() does not necessarily
+		 * return the correct index. Instead, it always returns the index of the
+		 * signal with all parameters which seems to have lowest index of the overloads.
+		 * So we check the signal spies of the following signals until we find the
+		 * one which caught the signal emission.
+		 */
+		for (; signalIndex < metaObject->methodCount(); ++signalIndex)
 		{
-			qWarning("QSignalInspector: Unexpected signal emitted");
-			return;
+			signalSpy = m_signalSpies.value(signalIndex);
+			if (!signalSpy)
+			{
+				qWarning("QSignalInspector: Unexpected signal emitted");
+				return;
+			}
+			if (signalSpy->count() > 0)
+				break;
 		}
 
 		QList<QVariant> signalParameters = signalSpy->at(0);
-		this->append(qMakePair(sender->metaObject()->method(signalIndex), signalParameters));
+		this->append(qMakePair(metaObject->method(signalIndex), signalParameters));
 		signalSpy->clear();
 	}
 
