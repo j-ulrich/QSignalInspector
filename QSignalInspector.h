@@ -67,17 +67,17 @@ private Q_SLOTS:
 		QObject* sender = this->sender();
 		const QMetaObject* metaObject = sender->metaObject();
 
-		int signalIndex = this->senderSignalIndex();
-		QSharedPointer<QSignalSpy> signalSpy;
-
-		/* For overloaded signals, senderSignalIndex() does not necessarily
-		 * return the correct index. Instead, it always returns the index of the
-		 * signal with all parameters which seems to have lowest index of the overloads.
-		 * So we check the signal spies of the following signals until we find the
-		 * one which caught the signal emission.
+		/* For overloaded signals, senderSignalIndex() does not necessarily return the correct index.
+		 * So we cannot rely on senderSignalIndex().
+		 * Instead, we simply check all the signal spies until we find the one which caught the signal emission.
 		 */
+		int signalIndex = 0;
+		QSharedPointer<QSignalSpy> signalSpy;
 		for (; signalIndex < metaObject->methodCount(); ++signalIndex)
 		{
+			if (metaObject->method(signalIndex).methodType() != QMetaMethod::Signal)
+				continue;
+
 			signalSpy = m_signalSpies.value(signalIndex);
 			if (!signalSpy)
 			{
