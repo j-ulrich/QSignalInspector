@@ -92,4 +92,5 @@ int main(int argc, char **argv)
 	                "{ \"random\": \"gLINDuERfaRBQesd6FuF2DJ0vMaVvHDlCPm9ib2DnIIrgSwVSYQdlb5RvUiK89EZIJMeCQOk1iRRDYSiCN8sdpvehD9JP1eKWxfTzZtLLUlAEVVKBqmz4oheyJYcLpWxNnxPlAUHmJ3I09ZYli99sF9wM1Amhjnj4vKwWuWSJRtsQZrJdMDdWteUjnxQQy4SyTzVoXlFxljLu96WAc7kOPREd9brDzyfVGxOJ79cnwO8M3wBLExAwVX4fdLf9qbPz0UsErefH9t1Sy2hVeGFKzeewRLN97djADR\" }",
 	                "application/json");
 
+	return 0;
 }
