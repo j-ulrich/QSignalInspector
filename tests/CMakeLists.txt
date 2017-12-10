@@ -5,6 +5,7 @@ project(QSignalInspectorTests)
 enable_testing()
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5 COMPONENTS Core Test OPTIONAL_COMPONENTS Network)
 
 include_directories(${PROJECT_SOURCE_DIR}/..)
