@@ -37,11 +37,27 @@
 #include <QMetaMethod>
 #include <QSharedPointer>
 
+/*! The QSignalInspector records signal emission of **all** signals of a class.
+ *
+ * QSignalInspector is very similar to QSignalSpy but it records the emission of all signals of a class.
+ * Internally, QSignalInspector uses one QSignalSpy for each of the signals of the class.
+ */
 class QSignalInspector : public QObject, public QList<QPair<QMetaMethod, QList<QVariant> > >
 {
 	Q_OBJECT
 
 public:
+	/*! Creates a QSignalInspector recording signal emission of the given \p object.
+	 *
+	 * After a signal has been emitted by \p object, the information about the signal
+	 * and the parameters of the emission can be accessed using the QList methods of this
+	 * QSignalInspector.
+	 *
+	 * \param object The object whose signals should recorded.
+	 * \param includeParentClassSignals If \c true, the signals of all parent classes of
+	 * \p object are recorded as well. If \c false, only those signals are recorded that
+	 * are declared by the last class in the inheritance hierarchy of \p object.
+	 */
 	explicit QSignalInspector(const QObject* object, bool includeParentClassSignals = true)
 		: QObject()
 	{
