@@ -55,7 +55,7 @@ QSignalInspector(const QObject* object, bool includeParentClassSignals = true)
 
 Creates a QSignalInspector recording the signal emissions of _object_.
 
-** Parameters **<br/>
+**Parameters**<br/>
 **object** - The object whose signals should be recorded.<br/>
 **includeParentClassSignals** - If `true`, the signals of all parent classes of
 _object_ are recorded as well. If `false`, only those signals are recorded that
