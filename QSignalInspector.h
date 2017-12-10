@@ -42,21 +42,21 @@ class QSignalInspector : public QObject, public QList<QPair<QMetaMethod, QList<Q
 	Q_OBJECT
 
 public:
-	explicit QSignalInspector(const QObject* obj, bool includeBaseClassSignals = true)
+	explicit QSignalInspector(const QObject* object, bool includeParentClassSignals = true)
 		: QObject()
 	{
-		const QMetaObject* const metaObject = obj->metaObject();
+		const QMetaObject* const metaObject = object->metaObject();
 
 		QMetaMethod signalEmittedSlot = staticMetaObject.method(staticMetaObject.indexOfSlot("signalEmitted()"));
 
-		int methodIndex = includeBaseClassSignals? 0 : metaObject->methodOffset();
+		int methodIndex = includeParentClassSignals? 0 : metaObject->methodOffset();
 		for (; methodIndex < metaObject->methodCount(); ++methodIndex)
 		{
 			QMetaMethod metaMethod = metaObject->method(methodIndex);
 			if (metaMethod.methodType() == QMetaMethod::Signal)
 			{
-				m_signalSpies.insert(methodIndex, QSharedPointer<QSignalSpy>(new QSignalSpy(obj, ("2"+metaMethod.methodSignature()).constData())));
-				QObject::connect(obj, metaMethod, this, signalEmittedSlot);
+				m_signalSpies.insert(methodIndex, QSharedPointer<QSignalSpy>(new QSignalSpy(object, ("2"+metaMethod.methodSignature()).constData())));
+				QObject::connect(object, metaMethod, this, signalEmittedSlot);
 			}
 		}
 	}
@@ -65,6 +65,8 @@ private Q_SLOTS:
 	void signalEmitted()
 	{
 		QObject* sender = this->sender();
+		Q_ASSERT_X(sender, "signalEmitted()", "signalEmitted() slot must be called only via a signal");
+
 		const QMetaObject* metaObject = sender->metaObject();
 
 		/* For overloaded signals, senderSignalIndex() does not necessarily return the correct index.
