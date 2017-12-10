@@ -1,5 +1,7 @@
 # QSignalInspector #
 
+[![Build Status](https://travis-ci.org/j-ulrich/QSignalInspector.svg?branch=master)](https://travis-ci.org/j-ulrich/QSignalInspector)
+
 Implements spying on **all** signals of a QObject instance.
 
 QSignalInspector is very similar to [QSignalSpy][] but it records the emission of all signals of a class. Internally, QSignalInspector uses one QSignalSpy for each of the signals.
