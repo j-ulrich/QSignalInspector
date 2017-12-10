@@ -5,11 +5,11 @@ services:
 
 before_script:
   - cd tests
-  - docker build -t j-ulrich/QSignalInspector -f Dockerfile ..
+  - docker build -t j-ulrich/qsignalinspector -f Dockerfile ..
 
 script:
   - > 
-    docker run j-ulrich/QSignalInspector /bin/bash -c "
+    docker run j-ulrich/qsignalinspector /bin/bash -c "
     g++ --version
     && qmake --version
     && cd tests
