@@ -35,18 +35,28 @@
 #include <QList>
 #include <QSignalSpy>
 #include <QMetaMethod>
+#include <QDateTime>
 #include <QSharedPointer>
+
+struct QSignalEmissionEvent
+{
+	QMetaMethod signal;
+	QDateTime timestamp;
+	QList<QVariant> parameters;
+};
 
 /*! The QSignalInspector records signal emission of **all** signals of a class.
  *
  * QSignalInspector is very similar to QSignalSpy but it records the emission of all signals of a class.
  * Internally, QSignalInspector uses one QSignalSpy for each of the signals of the class.
  */
-class QSignalInspector : public QObject, public QList<QPair<QMetaMethod, QList<QVariant> > >
+class QSignalInspector : public QObject, public QList<QSignalEmissionEvent>
 {
 	Q_OBJECT
 
 public:
+
+
 	/*! Creates a QSignalInspector recording signal emission of the given \p object.
 	 *
 	 * After a signal has been emitted by \p object, the information about the signal
@@ -107,7 +117,11 @@ private Q_SLOTS:
 		}
 
 		QList<QVariant> signalParameters = signalSpy->at(0);
-		this->append(qMakePair(metaObject->method(signalIndex), signalParameters));
+		QSignalEmissionEvent event;
+		event.signal = metaObject->method(signalIndex);
+		event.timestamp = QDateTime::currentDateTime();
+		event.parameters = signalParameters;
+		this->append(event);
 		signalSpy->clear();
 	}
 

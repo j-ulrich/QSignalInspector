@@ -46,19 +46,28 @@ void QSignalInspectorTest::testSignalRecording()
 	QCOMPARE(inspector.size(), 0);
 
 	QString testString("foo bar");
+	QDateTime timeFrameBegin = QDateTime::currentDateTime();
 	emit emitter.stringSignal(testString);
+	QDateTime timeFrameEnd = QDateTime::currentDateTime();
 
 	QTRY_COMPARE(inspector.size(), 1);
-	QCOMPARE(inspector.at(0).first, QMetaMethod::fromSignal(&TestSignalEmitter::stringSignal));
-	QCOMPARE(inspector.at(0).second, QVariantList() << QVariant::fromValue(testString));
+	QCOMPARE(inspector.at(0).signal, QMetaMethod::fromSignal(&TestSignalEmitter::stringSignal));
+	QCOMPARE(inspector.at(0).parameters, QVariantList() << QVariant::fromValue(testString));
+	QVERIFY(inspector.at(0).timestamp >= timeFrameBegin);
+	QVERIFY(inspector.at(0).timestamp <= timeFrameEnd);
 
 	int testInt = 17;
 	QJsonDocument testJson = QJsonDocument::fromJson("{ \"foo\": \"bar\" }");
+	timeFrameBegin = QDateTime::currentDateTime();
 	emit emitter.complexSignal(testInt, testString, testJson);
+	timeFrameEnd = QDateTime::currentDateTime();
 
 	QTRY_COMPARE(inspector.size(), 2);
-	QCOMPARE(inspector.at(1).first, QMetaMethod::fromSignal(&TestSignalEmitter::complexSignal));
-	QCOMPARE(inspector.at(1).second, QVariantList() << QVariant::fromValue(testInt) << QVariant::fromValue(testString) << QVariant::fromValue(testJson));
+	QCOMPARE(inspector.at(1).signal, QMetaMethod::fromSignal(&TestSignalEmitter::complexSignal));
+	QCOMPARE(inspector.at(1).parameters, QVariantList() << QVariant::fromValue(testInt) << QVariant::fromValue(testString) << QVariant::fromValue(testJson));
+	QVERIFY(inspector.at(1).timestamp >= timeFrameBegin);
+	QVERIFY(inspector.at(1).timestamp <= timeFrameEnd);
+
 }
 
 /*! \test Tests the behavior of the \p includeParentClassSignals parameter
@@ -80,7 +89,7 @@ void QSignalInspectorTest::testParentSignals()
 	emitter.reset();
 
 	QTRY_COMPARE(fullInspector.size(), 2);
-	QCOMPARE(fullInspector.at(1).first, QMetaMethod::fromSignal(&QObject::destroyed));
+	QCOMPARE(fullInspector.at(1).signal, QMetaMethod::fromSignal(&QObject::destroyed));
 	QCOMPARE(leafInspector.size(), 1);
 }
 

@@ -33,13 +33,14 @@ int main(int argc, char **argv)
 	QSignalInspector::ConstIterator iter;
 	for (iter = inspector.begin(); iter != inspector.end(); ++iter)
 	{
+		QSignalEmissionEvent emission = *iter;
 		QStringList parameters;
 		QList<QVariant>::ConstIterator paramIter;
 
-		for (paramIter = iter->second.begin(); paramIter != iter.second.end(); ++paramIter)
+		for (paramIter = emission.parameters.begin(); paramIter != emission.parameters.end(); ++paramIter)
 			parameters << paramIter->toString();
 
-		out << iter->first.name() << "(" << parameters.join(", ") << ")" << endl;
+		out << emission.signal.name() << "(" << parameters.join(", ") << ")" << endl;
 	}
 
 	return 0;
