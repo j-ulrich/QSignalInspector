@@ -64,6 +64,35 @@ Creates a QSignalInspector recording the signal emissions of _object_.
 _object_ are recorded as well. If `false`, only those signals are recorded that
 are declared by the last class in the inheritance hierarchy of _object_.
 
+Then use the `QSignalInspector` as a `QList<QSignalEmissionEvent>` to retrieve
+the information about the emissions:
+
+```c++
+QSignalInspector mySignalInspector(&objectToBeWatched);
+
+// Trigger emissions of signals ...
+
+QSignalInspector::ConstIterator iter;
+for (iter = mySignalInspector.constBegin(); iter != mySignalInspector.constEnd(); ++iter)
+{
+	const QSignalEmissionEvent event = *iter;
+	// Do something with event ...
+}
+```
+
+Where `QSignalEmissionEvent` is a simple `struct`:
+
+```c++
+/*! Struct representing one emission of a signal.
+ */
+struct QSignalEmissionEvent
+{
+	QMetaMethod signal;         //!< The QMetaMethod of the signal that was emitted.
+	QDateTime timestamp;        //!< The time when the signal was emitted.
+	QList<QVariant> parameters; //!< The parameter values of the emission.
+};
+```
+
 
 ## Requirements ##
 
@@ -72,7 +101,7 @@ are declared by the last class in the inheritance hierarchy of _object_.
 
 ## License ##
 
-Copyright (c) 2017 Jochen Ulrich
+Copyright (c) 2018 Jochen Ulrich
 
 Licensed under [MIT license](LICENSE).
 

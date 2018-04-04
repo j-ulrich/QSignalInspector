@@ -7,7 +7,7 @@
  * \author Jochen Ulrich <jochenulrich@t-online.de>
  * \copyright
  * \parblock
- * © 2017 Jochen Ulrich
+ * © 2018 Jochen Ulrich
  *
  * MIT License
  *
@@ -38,11 +38,13 @@
 #include <QDateTime>
 #include <QSharedPointer>
 
+/*! Struct representing one emission of a signal.
+ */
 struct QSignalEmissionEvent
 {
-	QMetaMethod signal;
-	QDateTime timestamp;
-	QList<QVariant> parameters;
+	QMetaMethod signal;         //!< The QMetaMethod of the signal that was emitted.
+	QDateTime timestamp;        //!< The time when the signal was emitted.
+	QList<QVariant> parameters; //!< The parameter values of the emission.
 };
 
 /*! The QSignalInspector records signal emission of **all** signals of a class.
