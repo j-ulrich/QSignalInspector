@@ -5,6 +5,7 @@
 
 #include "QSignalInspector.h"
 
+#include <QtDebug>
 #include <QCoreApplication>
 #include <QFile>
 #include <QNetworkAccessManager>
@@ -55,8 +56,9 @@ QString escapeString(const QString& string)
 		{
 			if (i < (string.size() - 1))
 			{
-				QString surrogatePair = QString(string[i]) + string[++i];
+				QString surrogatePair = QString(string[i]) + string[i+1];
 				result += "\\u" + QString::number(surrogatePair.toUcs4().first(), 16).rightJustified(8, '0');
+				i += 1;
 			}
 		}
 		else
@@ -84,6 +86,8 @@ QSharedPointer<QSignalInspector> executeRequest(QNetworkAccessManager::Operation
 	QEventLoop eventLoop;
 	QObject::connect(reply.data(), &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
 	eventLoop.exec();
+
+	qDebug() << "Reply from:" << reply->url() << endl;
 
 	return inspector;
 }
@@ -138,6 +142,7 @@ void executeAndPrint(QNetworkAccessManager::Operation op,
 
 	QNetworkRequest req{QUrl{url}};
 	req.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+	req.setMaximumRedirectsAllowed(4);
 	if (!contentType.isEmpty())
 		req.setHeader(QNetworkRequest::ContentTypeHeader, contentType);
 	printSignals(out, executeRequest(op, req, qNam, body));
@@ -164,6 +169,7 @@ int main(int argc, char **argv)
 	executeAndPrint(QNetworkAccessManager::GetOperation, "http://httpbin.org/delay/3", out, qNam);
 	executeAndPrint(QNetworkAccessManager::GetOperation, "http://httpbin.org/drip?duration=5&code=500&numbytes=5", out, qNam);
 	executeAndPrint(QNetworkAccessManager::GetOperation, "http://httpbin.org/stream/20", out, qNam);
+	executeAndPrint(QNetworkAccessManager::GetOperation, "http://httpbin.org/redirect/5", out, qNam);
 
 	return 0;
 }
