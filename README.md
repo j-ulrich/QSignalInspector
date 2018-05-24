@@ -11,7 +11,7 @@ QSignalInspector is very similar to [QSignalSpy][] but it records the emission o
 
 ```c++
 #include "MyObject.h"
-#include "QSignalInspector.h"
+#include "QSignalInspector.hpp"
 #include <QTextStream>
 #include <QCoreApplication>
 #include <cstdio>
