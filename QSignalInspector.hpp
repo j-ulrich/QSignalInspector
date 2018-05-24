@@ -31,7 +31,8 @@
  * \endparblock
  */
 
-#pragma once
+#ifndef QSIGNALINSPECTOR_HPP
+#define QSIGNALINSPECTOR_HPP
 
 #include <QObject>
 #include <QList>
@@ -132,3 +133,5 @@ private Q_SLOTS:
 private:
 	QMap<int, QSharedPointer<QSignalSpy> > m_signalSpies;
 };
+
+#endif /* QSIGNALINSPECTOR_HPP */
