@@ -31,6 +31,8 @@
  * \endparblock
  */
 
+#pragma once
+
 #include <QObject>
 #include <QList>
 #include <QSignalSpy>
