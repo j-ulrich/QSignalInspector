@@ -3,7 +3,7 @@
  * \author Jochen Ulrich <jochenulrich@t-online.de>
  */
 
-#include "QSignalInspector.h"
+#include "../QSignalInspector.hpp"
 
 #include <QObject>
 #include <QtTest>
